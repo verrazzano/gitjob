@@ -12,6 +12,13 @@ RUN yum -y update && \
     rm -rf /var/cache/yum && \
     adduser -u 1000 gituser
 
+ENV PATH="/opt/rh/rh-git227/root/usr/bin:${PATH}"
+
+RUN cat /etc/profile.d/git.sh >> /etc/profile && \
+    cd /lib64 && \
+    ln -s /opt/rh/httpd24/root/usr/lib64/libcurl-httpd24.so.4 && \
+    ln -s /opt/rh/httpd24/root/usr/lib64/libnghttp2-httpd24.so.14
+
 COPY bin/gitjob /usr/bin/
 COPY LICENSE README.md THIRD_PARTY_LICENSES.txt SECURITY.md /licenses/
 
