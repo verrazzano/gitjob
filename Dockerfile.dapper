@@ -23,6 +23,10 @@ RUN yum-config-manager --enable ol7_optional_latest && \
     git version && \
     yum clean all
 
+RUN if [ "${ARCH}" == "amd64" ]; then \
+        curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s v1.46.2; \
+    fi
+
 ENV DAPPER_ENV REPO TAG DRONE_TAG
 ENV DAPPER_SOURCE /go/src/github.com/rancher/gitjob/
 ENV DAPPER_OUTPUT ./bin ./dist
