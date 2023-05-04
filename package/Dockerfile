@@ -15,5 +15,8 @@ RUN yum -y update && \
 COPY bin/gitjob /usr/bin/
 COPY LICENSE README.md THIRD_PARTY_LICENSES.txt SECURITY.md /licenses/
 
+# Update PATH to make sure git 2.27 is on the path
+ENV PATH="/opt/rh/rh-git227/root/usr/bin:${PATH}"
+
 USER 1000
 CMD ["gitjob"]
