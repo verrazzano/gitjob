@@ -63,6 +63,7 @@ func main() {
 
 func run(c *cli.Context) {
 	logrus.Info("Starting controller")
+	logrus.Debugf("Environment: %v", os.Environ())
 	ctx := signals.SetupSignalContext()
 
 	if c.Bool("debug") {
