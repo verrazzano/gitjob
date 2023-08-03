@@ -10,7 +10,7 @@ RUN yum -y update && \
     git version && \
     yum -y clean all && \
     rm -rf /var/cache/yum && \
-    adduser -u 1000 -U -m gitjob
+    adduser -u 1000 gituser
 
 COPY bin/gitjob /usr/bin/
 COPY LICENSE README.md THIRD_PARTY_LICENSES.txt SECURITY.md /licenses/
