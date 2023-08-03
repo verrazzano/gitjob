@@ -1,17 +1,31 @@
-FROM registry.suse.com/bci/golang:1.18-15.1
+FROM ghcr.io/oracle/oraclelinux:7-slim
 
 ARG DAPPER_HOST_ARCH
 ENV ARCH $DAPPER_HOST_ARCH
-ENV HELM_VERSION v3.2.0
-ENV HELM_URL_V3=https://get.helm.sh/helm-${HELM_VERSION}-linux-${ARCH}.tar.gz
 
-RUN zypper -n install git docker vim less file curl wget
+RUN yum-config-manager --enable ol7_optional_latest && \
+    yum-config-manager --enable ol7_addons && \
+    yum -y update && \
+    yum -y install bash git docker vim less file curl wget && \
+    # install golang 1.17
+    yum install -y oracle-golang-release-el7 && \
+    yum-config-manager --enable ol7_developer_golang117 && \
+    yum install -y golang-1.17.5 && \
+    # original Dockerfile.dapper used Helm v3.2 - 3.3.4 is the nearest available version (on olcne12 repo)
+    yum-config-manager --add-repo https://yum.oracle.com/repo/OracleLinux/OL7/olcne12/x86_64/ && \
+    yum -y install helm-3.3.4 && \
+    # software collections repo needed for git 2.x on OL7
+    yum-config-manager --add-repo=http://yum.oracle.com/repo/OracleLinux/OL7/SoftwareCollections/x86_64 && \
+    yum install -y rh-git227 && \
+    # Set up needed to ensure git 2.27 from rh-git227 is on the path (gitjob original v0.1.30 image uses git version 2.35.3)
+    ln /opt/rh/rh-git227/enable /etc/profile.d/git.sh && \
+    source /etc/profile.d/git.sh && \
+    git version && \
+    yum clean all
+
 RUN if [ "${ARCH}" == "amd64" ]; then \
         curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s v1.46.2; \
     fi
-RUN mkdir /usr/tmp && \
-    curl ${HELM_URL_V3} | tar xvzf - --strip-components=1 -C /usr/tmp/ && \
-    mv /usr/tmp/helm /usr/bin/helm
 
 ENV DAPPER_ENV REPO TAG DRONE_TAG
 ENV DAPPER_SOURCE /go/src/github.com/rancher/gitjob/
