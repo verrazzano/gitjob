@@ -21,4 +21,4 @@ ENV LD_LIBRARY_PATH=/opt/rh/httpd24/root/usr/lib64${LD_LIBRARY_PATH:+:${LD_LIBRA
 ENV PERL5LIB=/opt/rh/rh-git227/root/usr/share/perl5/vendor_perl:${PERL5LIB:+:${PERL5LIB}}
 
 USER 1000
-CMD gitjob
+ENTRYPOINT ["gitjob"]
