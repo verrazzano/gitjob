@@ -1,7 +1,7 @@
 FROM ghcr.io/oracle/oraclelinux:7-slim
 RUN yum -y update && \
     yum-config-manager --add-repo=http://yum.oracle.com/repo/OracleLinux/OL7/8/security/validation/x86_64 && \
-    yum -y install 	openssh-7.4p1-23.0.1.el7_9_fips.x86_64.rpm && \
+    yum -y install openssh-7.4p1-23.0.1.el7_9_fips.x86_64 && \
     # software collections repo needed for git 2.x on OL7
     yum-config-manager --add-repo=http://yum.oracle.com/repo/OracleLinux/OL7/SoftwareCollections/x86_64 && \
     yum install -y rh-git227 && \
