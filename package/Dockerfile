@@ -1,14 +1,9 @@
-FROM ghcr.io/oracle/oraclelinux:7-slim
-RUN yum -y update && \
-    # software collections repo needed for git 2.x on OL7
-    yum-config-manager --add-repo=http://yum.oracle.com/repo/OracleLinux/OL7/SoftwareCollections/x86_64 && \
-    yum install -y rh-git227 && \
-    # Set up needed to ensure git 2.27 from rh-git227 is on the path (gitjob original v0.1.30 image uses git version 2.35.3)
-    ln /opt/rh/rh-git227/enable /etc/profile.d/git.sh && \
-    source /etc/profile.d/git.sh && \
-    git version && \
-    yum -y clean all && \
-    rm -rf /var/cache/yum && \
+FROM ghcr.io/oracle/oraclelinux:8-slim
+
+RUN microdnf update -y --setopt=install_weak_deps=0 --setopt=tsflags=nodocs && \
+    microdnf install -y git && \
+    microdnf clean all && \
+    rm -rf /var/cache/yum /var/lib/rpm/* && \
     adduser -u 1000 gituser
 
 COPY bin/gitjob /usr/bin/
