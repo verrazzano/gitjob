@@ -10,7 +10,7 @@ RUN microdnf update -y --setopt=install_weak_deps=0 --setopt=tsflags=nodocs && \
     cd /go/src/github.com/rancher/gitjob/scripts && \
     ./build && \
     ./test && \
-    ./validate && \
+    ./validate
 
 FROM ghcr.io/oracle/oraclelinux:8-slim
 ARG ARCH
