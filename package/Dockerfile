@@ -1,4 +1,4 @@
-FROM ghcr.io/oracle/oraclelinux:8-slim
+FROM ghcr.io/oracle/oraclelinux:8-slim as build
 ARG ARCH
 ENV ARCH=$ARCH
 
@@ -11,11 +11,18 @@ RUN microdnf update -y --setopt=install_weak_deps=0 --setopt=tsflags=nodocs && \
     ./build && \
     ./test && \
     ./validate && \
+
+FROM ghcr.io/oracle/oraclelinux:8-slim
+ARG ARCH
+ENV ARCH=$ARCH
+
+RUN microdnf update -y --setopt=install_weak_deps=0 --setopt=tsflags=nodocs && \
+    microdnf install -y unzip nc mkisofs && \
     microdnf clean all && \
     rm -rf /var/cache/yum /var/lib/rpm/* && \
     adduser -u 1000 gituser
 
-COPY bin/gitjob /usr/bin/
+COPY --from=build /go/src/github.com/rancher/fleet/bin/gitjob /usr/bin/
 COPY LICENSE README.md THIRD_PARTY_LICENSES.txt SECURITY.md /licenses/
 
 # Update env vars to make sure git 2.27 is executable
