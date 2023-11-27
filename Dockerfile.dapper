@@ -22,7 +22,6 @@ RUN if [ "${ARCH}" == "amd64" ]; then \
 
 ENV DAPPER_ENV REPO TAG DRONE_TAG
 ENV DAPPER_SOURCE /go/src/github.com/rancher/gitjob/
-ENV DAPPER_OUTPUT ./bin ./dist
 ENV DAPPER_DOCKER_SOCKET true
 ENV DAPPER_RUN_ARGS "-v gitjob-pkg:/go/pkg -v gitjob-cache:/root/.cache/go-build"
 ENV GOPATH /go
