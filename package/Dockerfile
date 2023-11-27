@@ -8,6 +8,7 @@ RUN microdnf update -y --setopt=install_weak_deps=0 --setopt=tsflags=nodocs && \
     microdnf install -y git && \
     microdnf install -y golang-1.20.10-1.module+el8.9.0+90068+08775a1f.x86_64 && \
     cd /go/src/github.com/rancher/gitjob/scripts && \
+    mkdir bin && \
     ./build && \
     ls bin && \
     ./test && \
